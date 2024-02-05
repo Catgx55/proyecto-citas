@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
+import Error from './Error';
 
-function Form() {
+function Form({patients, setPatients}) {
   const [name, setName] = useState('');
   const [owner, setOwner] = useState('');
   const [email, setEmail] = useState('');
@@ -8,17 +9,42 @@ function Form() {
   const [symptoms, setSymptoms] = useState('');
   const [error, setError] = useState(false);
 
+  const newId = () => {
+    const random = Math.random().toString(36).substring(2)
+    const fecha = Date.now().toString(36)
+
+    return random + fecha
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    //Validación del formulario
     if([name, owner, email, alta, symptoms].includes('')){
       setError(true)
       return;
-    }
+    };
 
     setError(false);
 
+    //Objeto de pacientes
+    const objectPatients = {
+      name, 
+      owner, 
+      email, 
+      alta, 
+      symptoms,
+      id: newId()
+    }
 
+    setPatients([...patients, objectPatients]);
+
+    //Reiniciar form
+    setName('');
+    setOwner('');
+    setEmail('');
+    setAlta('');
+    setSymptoms('');
   }
 
 
@@ -30,9 +56,7 @@ function Form() {
         <span className='text-indigo-600 font-bold'>Administralos</span></p>
 
         <form onSubmit={handleSubmit} className='bg-white shadow-md rounded-lg py-10 px-5 mb-10' >
-          {error && <div className='bg-red-800 text-white text-center p-3 uppercase font-bold mb-3 rounded-md'>
-            <p>Todos los campos son obligatorios</p>
-            </div>}
+          {error && <Error><p>'Todos los campos son obligatorios'</p></Error> }
           <div className='mb-5'>
             <label htmlFor='mascota' className='block text-gray-700 uppercase'>
               Nombre Mascota
