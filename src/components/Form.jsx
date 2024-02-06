@@ -1,13 +1,23 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Error from './Error';
 
-function Form({patients, setPatients}) {
+function Form({patients, setPatients, patient}) {
   const [name, setName] = useState('');
   const [owner, setOwner] = useState('');
   const [email, setEmail] = useState('');
   const [alta, setAlta] = useState('');
   const [symptoms, setSymptoms] = useState('');
   const [error, setError] = useState(false);
+
+  useEffect(() => {
+    if(Object.keys(patient).length > 0){
+      setName(patient.name);
+      setOwner(patient.owner);
+      setEmail(patient.email);
+      setAlta(patient.alta);
+      setSymptoms(patient.symptoms);
+    }
+  }, [patient])
 
   const newId = () => {
     const random = Math.random().toString(36).substring(2)
