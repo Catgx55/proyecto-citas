@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Error from './Error';
 
-function Form({patients, setPatients, patient}) {
+function Form({patients, setPatients, patient, setPatient}) {
   const [name, setName] = useState('');
   const [owner, setOwner] = useState('');
   const [email, setEmail] = useState('');
@@ -43,11 +43,20 @@ function Form({patients, setPatients, patient}) {
       owner, 
       email, 
       alta, 
-      symptoms,
-      id: newId()
+      symptoms
     }
 
-    setPatients([...patients, objectPatients]);
+    if(patient.id){
+      //Editando el registro
+      objectPatients.id = patient.id;
+      const patientUpdated = patients.map(patientState => patientState.id === patient.id ? objectPatients : patientState);
+      setPatients(patientUpdated);
+      setPatient({});
+    }else{
+      //Nuevo Registro
+      objectPatients.id = newId();
+      setPatients([...patients, objectPatients]);
+    }
 
     //Reiniciar form
     setName('');
@@ -134,7 +143,7 @@ function Form({patients, setPatients, patient}) {
           <input 
             type='submit'
             className='bg-indigo-600 w-full p-3 text-white uppercase font-bold hover:bg-indigo-900 cursor-pointer transition-all'
-            value='Agregar Paciente'
+            value={patient.id ? 'Actualizar datos' : 'Agregar Paciente'}
           />
         </form>
     </div>
