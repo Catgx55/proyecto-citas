@@ -1,12 +1,21 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "./components/Header"
 import Form from "./components/Form"
 import ListPatients from "./components/ListPatients"
 
 function App() {
 
-  const [patients, setPatients] = useState([]);
+  const [patients, setPatients] = useState(JSON.parse(localStorage.getItem('patients')) ?? [])
   const [patient, setPatient] = useState({});
+
+  useEffect(() => {
+    const patientsLS = JSON.parse(localStorage.getItem('patients')) ?? [];
+    setPatients(patientsLS);
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('patients', JSON.stringify(patients));
+  }, [patients]);
 
   const deletePatient = (id) => {
     const patientsUpdated = patients.filter(patient => patient.id !== id);
